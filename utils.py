@@ -1,3 +1,4 @@
+import os
 import math
 import torch
 import torch.nn as nn
@@ -11,13 +12,13 @@ def load_data(name: str):
     return data
     
 class BivariateGuassianMixture:
-    def __init__(self, pi_logits, mu_x, mu_y, sigma_x, sigma_y, rho__xy):
+    def __init__(self, pi_logits, mu_x, mu_y, sigma_x, sigma_y, rho_xy):
         self.pi_logits = pi_logits
         self.mu_x = mu_x
         self.mu_y = mu_y
         self.sigma_x = sigma_x
         self.sigma_y = sigma_y
-        self.rho__xy = rho__xy
+        self.rho_xy = rho_xy
         
     @property
     def n_distributions(self):
@@ -52,7 +53,7 @@ class BivariateGuassianMixture:
 
 class ReconstructionLoss():
     
-    def __call__(mask, target, dist, q_logits):
+    def __call__(self, mask, target, dist, q_logits):
         
         pi, mix = dist.get_distribution()
         xy = target[:, :, 0:2].unsqueeze(-2).expand(-1, -1, dist.n_distributions, -1)
@@ -65,7 +66,7 @@ class ReconstructionLoss():
 
 class KLDivLoss():
     
-    def __call__(sigma_hat, mu):
+    def __call__(self, sigma_hat, mu):
         
         return -0.5 * torch.mean(1 + sigma_hat - mu ** 2 - torch.exp(sigma_hat))
     

@@ -26,7 +26,7 @@ class Encoder(nn.Module):
         
         sigma = torch.exp(sigma_hat / 2.)
         
-        z = mu + sigma * torch.normal(mu.zew_zeros(mu.shape), mu.new_ones(mu.shape))
+        z = mu + sigma * torch.normal(mu.new_zeros(mu.shape), mu.new_ones(mu.shape))
         
         return z, mu, sigma
 
@@ -34,7 +34,7 @@ class Decoder(nn.Module):
     def __init__(self, d_z: int, dec_hidden_size: int, n_distributions: int):
         super().__init__()
         
-        self.lstm = nn.LSTM(dz + 5, dec_hidden_size)
+        self.lstm = nn.LSTM(d_z + 5, dec_hidden_size)
         
         self.init_state = nn.Linear(d_z, dec_hidden_size * 2)
         
@@ -62,6 +62,6 @@ class Decoder(nn.Module):
             torch.split(self.mixture(outputs), self.n_distributions, 2)
         
         dist = BivariateGuassianMixture(pi_logits, mu_x, mu_y, 
-                                        torch.exp(sigma_x), torch.exp(sigma_y),torch.tanh(rho__xy))
+                                        torch.exp(sigma_x), torch.exp(sigma_y),torch.tanh(rho_xy))
         
         return dist, q_logits, state

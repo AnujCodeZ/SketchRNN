@@ -1,0 +1,14 @@
+cycler==0.10.0
+einops==0.3.0
+kiwisolver==1.3.1
+matplotlib==3.4.2
+numpy==1.20.3
+Pillow==8.2.0
+pyparsing==2.4.7
+python-dateutil==2.8.1
+six==1.16.0
+torch==1.8.1+cpu
+torchaudio==0.8.1
+torchvision==0.9.1+cpu
+tqdm==4.61.0
+typing-extensions==3.10.0.0

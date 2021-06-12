@@ -27,13 +27,13 @@ class Configs:
         self.lr = lr
         self.epochs = epochs
         
-        self.encoder = Encoder(self.d_z, self.enc_hidden_size)
-        self.decoder = Decoder(self.d_z, self.dec_hidden_size, self.n_distributions)
+        self.encoder = Encoder(self.d_z, self.enc_hidden_size).to(self.device)
+        self.decoder = Decoder(self.d_z, self.dec_hidden_size, self.n_distributions).to(self.device)
         
         self.reconstruction_loss = ReconstructionLoss()
         self.kldiv_loss = KLDivLoss()
         
-        self.optimizer = torch.optim.Adam(self.encoder.parameters() + self.decoder.parameters(), 
+        self.optimizer = torch.optim.Adam(list(self.encoder.parameters()) + list(self.decoder.parameters()), 
                                           lr=self.lr)
         
         

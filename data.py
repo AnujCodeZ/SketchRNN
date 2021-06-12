@@ -18,7 +18,7 @@ class StrokesDataset(Dataset):
                 seq = np.array(seq, dtype=np.float32)
                 data.append(seq)
         # calculating standard scale for x and y
-        if scale in None:
+        if scale is None:
             scale = np.std(np.concatenate([np.ravel(s[:, 0:2]) for s in data]))
         self.scale = scale
         
@@ -49,6 +49,6 @@ class StrokesDataset(Dataset):
         
         return len(self.data)
     
-    def __getitem__(self, index: int) -> Tuple(torch.Tensor, torch.Tensor):
+    def __getitem__(self, index: int):
         
         return self.data[index], self.mask[index]
