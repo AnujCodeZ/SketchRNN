@@ -1,5 +1,6 @@
 import math
 import torch
+import torch.nn as nn
 import numpy as np
 
 
@@ -48,3 +49,23 @@ class BivariateGuassianMixture:
         cat_dist = torch.distributions.Categorical(logits=self.pi_logits)
         
         return cat_dist, multi_dist
+
+class ReconstructionLoss():
+    
+    def __call__(mask, target, dist, q_logits):
+        
+        pi, mix = dist.get_distribution()
+        xy = target[:, :, 0:2].unsqueeze(-2).expand(-1, -1, dist.n_distributions, -1)
+        probs = torch.sum(pi.probs * torch.exp(mix.log_prob(xy)), 2)
+        
+        loss_stroke = -torch.mean(mask * torch.log(1e-5 + probs))
+        loss_pen = -torch.mean(target[:, :, 2:] * q_logits)
+        
+        return loss_stroke + loss_pen
+
+class KLDivLoss():
+    
+    def __call__(sigma_hat, mu):
+        
+        return -0.5 * torch.mean(1 + sigma_hat - mu ** 2 - torch.exp(sigma_hat))
+    
